@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { connect } from 'react-redux'
+import { moveRandomGamePage } from '../App/operations'
 
 type Props = {
   title: string
@@ -23,12 +24,14 @@ class MainPage extends React.Component<Props> {
   }
 }
 
+const ms = () => {
+  return {
+    title: '時雨',
+    // time: db.time,
+  }
+}
+
 export default connect(
-  db => {
-    return {
-      title: '時雨',
-      // time: db.time,
-    }
-  },
-  {}
+  ms,
+  { onClick: moveRandomGamePage }
 )(MainPage)
