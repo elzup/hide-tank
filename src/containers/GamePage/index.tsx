@@ -2,12 +2,15 @@ import * as React from 'react'
 
 import { connect } from 'react-redux'
 import { RouteComponentProps, RouterProps } from 'react-router'
-import { State } from '../../types'
+import { getGameState } from '../../store/Game/selectors'
+import { GameState, State } from '../../types'
 
 type Props = {
-  gameState: 'wait' | 'start'
+  game: GameState
   room: string
 }
+
+const toj = (a: Object) => JSON.stringify(a, null, '\t')
 
 class GamePage extends React.Component<Props> {
   componentDidMount() {
@@ -20,7 +23,7 @@ class GamePage extends React.Component<Props> {
       <div>
         <h4>ゲームページです</h4>
         <h5>ルーム: {props.room}</h5>
-        <p>{props.gameState}</p>
+        <textarea>{toj(props.game)}</textarea>
       </div>
     )
   }
@@ -30,12 +33,12 @@ type OProps = RouteComponentProps<{ room: string }>
 // OwnProps
 // <GamePage hoge="" />
 type SProps = {
-  gameState: 'wait' | 'start'
+  game: GameState
 }
 type DProps = {}
 export default connect<SProps, DProps, OProps, State>(
   (state, ownProps) => ({
-    gameState: 'wait',
+    game: getGameState(state),
     room: ownProps.match.params.room,
   }),
   {}

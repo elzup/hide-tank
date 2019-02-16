@@ -25,7 +25,7 @@ export type CellPosition = {
   cy: number
 }
 
-type SpeedType = 'walk' | 'run'
+type SpeedType = 'stop' | 'walk' | 'run'
 
 type Wepon = {
   id: number
@@ -43,7 +43,7 @@ type Bullet = {
 }
 
 export type Player = {
-  id: string
+  id: number
   position: StagePosition
   cellPosition: CellPosition
   wepon: {
@@ -51,7 +51,7 @@ export type Player = {
     amount: number
     bullets: Bullet[]
   }
-  vistion: {
+  vision: {
     pr: number
   }
   hp: number // 10
@@ -114,3 +114,5 @@ export type GameFinishState = {
   processType: 'finish'
   winnerPlayerId: number
 }
+
+export type GameState = GameProgressState | GameFinishState
