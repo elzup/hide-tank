@@ -6,6 +6,7 @@ import { Texture } from 'pixi.js'
 import cellEmpty from '../../../../components/res/cell-empty.png'
 import cellWall from '../../../../components/res/cell-wall.png'
 import {
+  Cell,
   GameProgressState,
   GameState,
   Stage as GameStage,
@@ -15,18 +16,32 @@ type Props = {
   game: GameState
 }
 
+const CellSprice = ({ cell }: { cell: Cell }) => {
+  switch (cell.type) {
+    case 'empty':
+      return (
+        <Sprite
+          texture={Texture.fromImage(cellEmpty)}
+          x={cell.position.cx * 24}
+          y={cell.position.cy * 24}
+        />
+      )
+    case 'wall':
+      return (
+        <Sprite
+          texture={Texture.fromImage(cellWall)}
+          x={cell.position.cx * 24}
+          y={cell.position.cy * 24}
+        />
+      )
+  }
+}
+
 const Background: React.SFC<{ stage: GameStage }> = ({ stage }) => {
   return (
     <>
       {_.map(stage.cells, lineCells =>
-        _.map(lineCells, cell => (
-          <Sprite
-            key={cell.id}
-            texture={Texture.fromImage(cellWall)}
-            x={cell.position.cx * 24}
-            y={cell.position.cy * 24}
-          />
-        ))
+        _.map(lineCells, cell => <CellSprice key={cell.id} cell={cell} />)
       )}
     </>
   )
