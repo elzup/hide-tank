@@ -69,6 +69,10 @@ const makeStage = (): Stage => {
   return stage
 }
 
+// const testvar = () => {
+//   return [id<number>: 2, key<number>: 2]
+// }
+
 const initialState: State = {
   processType: 'progress',
   currentPlayerId: 0,

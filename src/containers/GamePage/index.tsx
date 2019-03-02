@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { RouteComponentProps, RouterProps } from 'react-router'
 import { getGameState } from '../../store/Game/selectors'
 import { GameState, State } from '../../types'
+import GameScreen from './components/GameScreen'
 
 type Props = {
   game: GameState
@@ -24,6 +25,7 @@ class GamePage extends React.Component<Props> {
         <h4>ゲームページです</h4>
         <h5>ルーム: {props.room}</h5>
         <textarea>{toj(props.game)}</textarea>
+        <GameScreen game={props.game} />
       </div>
     )
   }
