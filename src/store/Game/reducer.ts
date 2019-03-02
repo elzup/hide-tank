@@ -51,8 +51,10 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 `
 
 const makeStage = (): Stage => {
-  const stage: Stage = { cells: {} }
-  _.compact(stageText.split('\n')).forEach((line, cy) => {
+  const lines = _.compact(stageText.split('\n'))
+  // height > 1
+  const stage: Stage = { cells: {}, ch: lines.length, cw: lines[0].length }
+  lines.forEach((line, cy) => {
     stage.cells[cy] = {}
     line.split('').forEach((char, cx) => {
       if (!(char === 'e' || char === 'w')) {

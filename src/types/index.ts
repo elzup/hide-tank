@@ -70,6 +70,8 @@ export type Cell = {
 }
 
 export type Stage = {
+  cw: number
+  ch: number
   cells: {
     [cy: number]: {
       [cx: number]: Cell

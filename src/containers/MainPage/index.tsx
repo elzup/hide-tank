@@ -17,7 +17,6 @@ class MainPage extends React.Component<Props> {
     return (
       <div>
         <h4>Test:SpeechArea</h4>
-        <p>{this.props.title}</p>
         <button onClick={this.props.onClick}>ゲームを始める</button>
       </div>
     )
@@ -26,7 +25,6 @@ class MainPage extends React.Component<Props> {
 
 const ms = () => {
   return {
-    title: '時雨',
     // time: db.time,
   }
 }

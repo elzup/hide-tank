@@ -1,13 +1,14 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
-import { persistReducer, persistStore } from 'redux-persist'
+import { PersistConfig, persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web and AsyncStorage for react-native
 
 import thunk from 'redux-thunk'
 import { rootReducer } from './reducer'
 
-const persistConfig = {
+const persistConfig: PersistConfig = {
   key: 'root',
   storage,
+  whitelist: [],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

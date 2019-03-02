@@ -24,7 +24,6 @@ class GamePage extends React.Component<Props> {
       <div>
         <h4>ゲームページです</h4>
         <h5>ルーム: {props.room}</h5>
-        <textarea>{toj(props.game)}</textarea>
         <GameScreen game={props.game} />
       </div>
     )
