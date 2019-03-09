@@ -25,8 +25,8 @@ class GamePage extends React.Component<Props> {
     const { props } = this
     return (
       <div>
-        <h4>ゲームページです</h4>
-        <h5>ルーム: {props.room}</h5>
+        {/* <h4>ゲームページです</h4>
+        <h5>ルーム: {props.room}</h5> */}
         <GameScreen game={props.game} />
       </div>
     )
