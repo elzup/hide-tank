@@ -84,17 +84,19 @@ export type Position = {
   y: number
 }
 
+export type MoveStick =
+  | {
+      active: true
+      startPosition: Position
+      currentPosition: Position
+      diffPosition: Position
+      speedType: SpeedType
+      radian: number
+    }
+  | { active: false }
+
 export type Control = {
-  moveStick:
-    | {
-        active: true
-        startPosition: Position
-        currentPosition: Position
-        diffPosition: Position
-        speedType: SpeedType
-        radian: number
-      }
-    | { active: false }
+  moveStick: MoveStick
   bulletButton: {
     active: boolean
   }

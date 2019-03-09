@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import config from '../../config'
-import { CellType, GameState, Stage } from '../../types'
+import { CellType, GameState, MoveStick, Stage } from '../../types'
 import * as actions from './actions'
 
 export type State = GameState
@@ -110,9 +110,24 @@ const initialState: State = {
   },
 } as State
 
-export const reducer = reducerWithInitialState(initialState).case(
-  actions.updateGameState,
-  (state, payload) => {
+export const reducer = reducerWithInitialState(initialState)
+  .case(actions.updateGameState, (state, payload) => {
     return payload
-  }
-)
+  })
+  .case(actions.saveControl, (state, control) => {
+    return { ...state, control }
+  })
+  .case(actions.startMoveStick, (state, { x, y }) => {
+    const moveStick: MoveStick = {
+      active: true,
+      startPosition: { x, y },
+      currentPosition: { x, y },
+      diffPosition: { x: 0, y: 0 },
+      speedType: 'stop',
+      radian: 0,
+    }
+    return _.merge({}, state, { control: { moveStick } })
+  })
+  .case(actions.endMoveStick, state => {
+    return _.merge({}, state, { control: { moveStick: { active: false } } })
+  })
