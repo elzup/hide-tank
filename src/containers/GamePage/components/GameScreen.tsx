@@ -1,14 +1,9 @@
 import _ from 'lodash'
 import * as React from 'react'
-import { Sprite, Stage } from 'react-pixi-fiber'
+import { Stage } from 'react-pixi-fiber'
 
 import { Point } from 'pixi.js'
-import {
-  Cell,
-  GameProgressState,
-  GameState,
-  Stage as GameStage,
-} from '../../../types'
+import { GameProgressState, GameState } from '../../../types'
 import PlayersLayer from './PlayersLayer'
 import StageLayer from './StageLayer'
 
@@ -28,7 +23,6 @@ const GameProgressScreen: React.SFC<{
   const isHeightOver = width * screenHeight > screenWidth * height
   // console.log(isHeightOver ? '縦長' : '横長')
   const scale = isHeightOver ? screenWidth / width : screenHeight / height
-  console.log({ scale })
 
   return (
     <div style={{ width: '100%', height: '100vh', overflow: 'hidden' }}>
