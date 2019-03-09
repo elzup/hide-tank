@@ -7,7 +7,7 @@ import cellEmpty from '../../../components/res/cell-empty.png'
 import cellWall from '../../../components/res/cell-wall.png'
 import { Cell, Stage as GameStage } from '../../../types'
 
-const CellSprice = ({ cell }: { cell: Cell }) => {
+const CellSprite = ({ cell }: { cell: Cell }) => {
   switch (cell.type) {
     case 'empty':
       return (
@@ -33,10 +33,15 @@ type Props = { stage: GameStage }
 const StageLayer: React.SFC<Props> = ({ stage }) => {
   return (
     <>
-      {_.map(stage.cells, lineCells =>
-        _.map(lineCells, cell => <CellSprice key={cell.id} cell={cell} />)
-      )}
+      {_.map(stage.cells, lineCells => (
+        <>
+          {_.map(lineCells, cell => (
+            <CellSprite key={cell.id} cell={cell} />
+          ))}
+        </>
+      ))}
     </>
   )
 }
+
 export default StageLayer
