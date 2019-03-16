@@ -132,6 +132,9 @@ export const reducer = reducerWithInitialState(initialState)
   .case(actions.updateMoveStick, (state, moveStick) => {
     return _.merge({}, state, { control: { moveStick } })
   })
+  .case(actions.updatePlayer, (state, player) => {
+    return _.merge({}, state, { players: [player] })
+  })
   .case(actions.endMoveStick, state => {
     return _.merge({}, state, { control: { moveStick: { active: false } } })
   })
