@@ -1,9 +1,8 @@
 import _ from 'lodash'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import config from '../../config'
-import { CellType, GameState, MoveStick, Stage } from '../../types'
+import { CellType, GameState, Stage } from '../../types'
 import * as actions from './actions'
-import { getControl } from './selectors'
 
 export type State = GameState
 
@@ -72,10 +71,6 @@ const makeStage = (): Stage => {
   return stage
 }
 
-// const testvar = () => {
-//   return [id<number>: 2, key<number>: 2]
-// }
-
 const initialState: State = {
   processType: 'progress',
   currentPlayerId: 0,
@@ -105,36 +100,12 @@ const initialState: State = {
   ],
   timeLimit: config.timeLimit,
   stage: makeStage(),
-  control: {
-    moveStick: { active: false },
-    bulletButton: { active: false },
-  },
-} as State
+}
 
-export const reducer = reducerWithInitialState(initialState)
+export const reducer = reducerWithInitialState<State>(initialState)
   .case(actions.updateGameState, (state, payload) => {
     return payload
   })
-  .case(actions.saveControl, (state, control) => {
-    return { ...state, control }
-  })
-  .case(actions.startMoveStick, (state, { x, y }) => {
-    const moveStick: MoveStick = {
-      active: true,
-      startPosition: { x, y },
-      currentPosition: { x, y },
-      diffPosition: { x: 0, y: 0 },
-      speedType: 'stop',
-      radian: 0,
-    }
-    return _.merge({}, state, { control: { moveStick } })
-  })
-  .case(actions.updateMoveStick, (state, moveStick) => {
-    return _.merge({}, state, { control: { moveStick } })
-  })
   .case(actions.updatePlayer, (state, player) => {
     return _.merge({}, state, { players: [player] })
-  })
-  .case(actions.endMoveStick, state => {
-    return _.merge({}, state, { control: { moveStick: { active: false } } })
   })

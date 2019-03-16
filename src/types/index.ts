@@ -111,7 +111,6 @@ export type GameProgressState = {
   players: Player[]
   timeLimit: number
   stage: Stage
-  control: Control
 }
 
 export type GameFinishState = {
