@@ -3,6 +3,7 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import config from '../../config'
 import { CellType, GameState, MoveStick, Stage } from '../../types'
 import * as actions from './actions'
+import { getControl } from './selectors'
 
 export type State = GameState
 
@@ -126,6 +127,9 @@ export const reducer = reducerWithInitialState(initialState)
       speedType: 'stop',
       radian: 0,
     }
+    return _.merge({}, state, { control: { moveStick } })
+  })
+  .case(actions.updateMoveStick, (state, moveStick) => {
     return _.merge({}, state, { control: { moveStick } })
   })
   .case(actions.endMoveStick, state => {

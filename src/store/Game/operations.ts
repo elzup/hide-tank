@@ -1,6 +1,13 @@
-import { MoveStick, ThunkAction } from '../../types'
-import { startMoveStick } from './actions'
+import { MoveStick, SpeedType, ThunkAction } from '../../types'
+import { endMoveStick, startMoveStick, updateMoveStick } from './actions'
 import { getControl } from './selectors'
+
+const judgeSpeedType = (r, threshold): SpeedType => {
+  if (r <= threshold / 2) {
+    return 'stop'
+  }
+  return r <= threshold ? 'walk' : 'run'
+}
 
 // 'mousemove', 'mousemove'
 export function windowControlInit(): ThunkAction {
@@ -32,19 +39,41 @@ export function windowControlInit(): ThunkAction {
         dispatch(startMoveStick({ x, y }))
       }
     })
+    // TODO: window.addEventListener('touchmove', e => {
+    window.addEventListener('mousemove', e => {
+      const control = getControl(getState())
+      if (!control) {
+        return
+      }
+      const { moveStick } = control
+      if (moveStick.active) {
+        const x = e.clientX
+        const y = e.clientY
+        const dx = x - moveStick.startPosition.x
+        const dy = y - moveStick.startPosition.y
+        const dr = Math.sqrt(dx * dx + dy * dy)
+        const speedType = judgeSpeedType(dr, window.innerWidth / 4)
+        const radian = Math.atan2(-dy, dx)
 
-    window.addEventListener('touchmove', e => {
-      console.log('move')
-      console.log(e.touches)
-      // 保存する
+        const newMoveStick: MoveStick = {
+          ...moveStick,
+          currentPosition: { x, y },
+          diffPosition: { x: dx, y: dy },
+          speedType,
+          radian,
+        }
+        dispatch(updateMoveStick(newMoveStick))
+      }
     })
-    window.addEventListener('touchend', e => {
-      console.log('end')
-      console.log(e.touches)
-      // 保存する
+    // TODO: window.addEventListener('touchend', e => {
+    window.addEventListener('mouseup', e => {
+      const control = getControl(getState())
+      if (!control) {
+        return
+      }
+      if (control.moveStick.active) {
+        dispatch(endMoveStick())
+      }
     })
-
-    // dispatch()
-    //
   }
 }

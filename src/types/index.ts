@@ -25,7 +25,7 @@ export type CellPosition = {
   cy: number
 }
 
-type SpeedType = 'stop' | 'walk' | 'run'
+export type SpeedType = 'stop' | 'walk' | 'run'
 
 type Wepon = {
   id: number
