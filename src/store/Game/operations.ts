@@ -6,7 +6,6 @@ import { getControl } from './selectors'
 export function windowControlInit(): ThunkAction {
   return (dispatch, getState) => {
     window.addEventListener('touchstart', e => {
-      console.log('touchstart')
       const control = getControl(getState())
       if (!control) {
         return
@@ -21,6 +20,19 @@ export function windowControlInit(): ThunkAction {
         }
       })
     })
+    window.addEventListener('mousedown', e => {
+      const control = getControl(getState())
+      if (!control) {
+        return
+      }
+      const x = e.clientX
+      const y = e.clientY
+      // TODO: 画面の左半分か
+      if (x < window.innerWidth / 2) {
+        dispatch(startMoveStick({ x, y }))
+      }
+    })
+
     window.addEventListener('touchmove', e => {
       console.log('move')
       console.log(e.touches)
