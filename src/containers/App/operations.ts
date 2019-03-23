@@ -1,10 +1,10 @@
 import { ThunkAction } from '../../types'
 import { genRnadom } from '../../utils'
-import { history } from './'
+import { browserHistory } from './'
 
 export const historyPush = (path: string): ThunkAction => {
   return () => {
-    history.push(path)
+    browserHistory.push(path)
   }
 }
 

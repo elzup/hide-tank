@@ -1,17 +1,17 @@
-import createHistory from 'history/createBrowserHistory'
+import * as history from 'history'
 import * as React from 'react'
 import { Route, Router, Switch } from 'react-router'
 import GamePage from '../GamePage'
 import MainPage from '../MainPage'
 
-export const history = createHistory()
+export const browserHistory = history.createBrowserHistory()
 export interface Actions {}
 
 type Props = {}
 
 const App: React.SFC<Props> = props => {
   return (
-    <Router history={history}>
+    <Router history={browserHistory}>
       <div>
         <Switch>
           <Route exact path={'/'} component={MainPage} />

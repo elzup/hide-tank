@@ -108,9 +108,7 @@ export type Control = {
 export type GameProgressState = {
   processType: 'progress'
   currentPlayerId: number
-  players: Player[]
   timeLimit: number
-  stage: Stage
 }
 
 export type GameFinishState = {

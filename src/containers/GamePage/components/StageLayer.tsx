@@ -30,18 +30,17 @@ const CellSprite = ({ cell }: { cell: Cell }) => {
 
 type Props = { stage: GameStage }
 
-const StageLayer: React.SFC<Props> = ({ stage }) => {
+const StageLayer = React.memo(({ stage }: Props) => {
+  console.log('stage layer draw')
   return (
     <>
-      {_.map(stage.cells, lineCells => (
-        <>
-          {_.map(lineCells, cell => (
-            <CellSprite key={cell.id} cell={cell} />
-          ))}
-        </>
-      ))}
+      {_.flatten(
+        _.map(stage.cells, lineCells =>
+          _.map(lineCells, cell => <CellSprite key={cell.id} cell={cell} />)
+        )
+      )}
     </>
   )
-}
+})
 
 export default StageLayer

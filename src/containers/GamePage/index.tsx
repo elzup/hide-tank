@@ -1,21 +1,21 @@
 import * as React from 'react'
 
 import { connect } from 'react-redux'
-import { RouteComponentProps, RouterProps } from 'react-router'
+import { RouteComponentProps } from 'react-router'
 import { windowControlInit } from '../../store/Control/operations'
 import { setupLoop } from '../../store/Game/operations'
 import { getGameState } from '../../store/Game/selectors'
-import { GameState, State } from '../../types'
+import { getStage } from '../../store/Stage/selectors'
+import { GameState, Stage, State } from '../../types'
 import GameScreen from './components/GameScreen'
 
 type Props = {
   game: GameState
+  stage: Stage
   room: string
   windowControlInit: () => void
   setupLoop: () => void
 }
-
-const toj = (a: Object) => JSON.stringify(a, null, '\t')
 
 class GamePage extends React.Component<Props> {
   componentDidMount() {
@@ -40,6 +40,7 @@ type OProps = RouteComponentProps<{ room: string }>
 // <GamePage hoge="" />
 type SProps = {
   game: GameState
+  stage: Stage
 }
 type DProps = {
   setupLoop: () => void
@@ -49,6 +50,7 @@ type DProps = {
 export default connect<SProps, DProps, OProps, State>(
   (state, ownProps) => ({
     game: getGameState(state),
+    stage: getStage(state),
     room: ownProps.match.params.room,
   }),
   { windowControlInit, setupLoop }
