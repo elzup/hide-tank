@@ -30,7 +30,8 @@ const CellSprite = ({ cell }: { cell: Cell }) => {
 
 type Props = { stage: GameStage }
 
-const StageLayer: React.SFC<Props> = ({ stage }) => {
+const StageLayer = React.memo(({ stage }: Props) => {
+  console.log('stage layer draw')
   return (
     <>
       {_.flatten(
@@ -40,6 +41,6 @@ const StageLayer: React.SFC<Props> = ({ stage }) => {
       )}
     </>
   )
-}
+})
 
 export default StageLayer
