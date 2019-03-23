@@ -9,6 +9,5 @@ export const startMoveStick = actionCreator<{
 }>('startMoveStick')
 
 export const updateMoveStick = actionCreator<MoveStick>('updateMoveStick')
-export const updatePlayer = actionCreator<Player>('updatePlayer')
 
 export const endMoveStick = actionCreator('endMoveStick')

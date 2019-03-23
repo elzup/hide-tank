@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { connect } from 'react-redux'
-import { RouteComponentProps, RouterProps } from 'react-router'
+import { RouteComponentProps } from 'react-router'
 import { windowControlInit } from '../../store/Control/operations'
 import { setupLoop } from '../../store/Game/operations'
 import { getGameState } from '../../store/Game/selectors'
@@ -17,8 +17,6 @@ type Props = {
   setupLoop: () => void
 }
 
-const toj = (a: Object) => JSON.stringify(a, null, '\t')
-
 class GamePage extends React.Component<Props> {
   componentDidMount() {
     this.props.windowControlInit()
@@ -31,7 +29,7 @@ class GamePage extends React.Component<Props> {
       <div>
         {/* <h4>ゲームページです</h4>
         <h5>ルーム: {props.room}</h5> */}
-        <GameScreen game={props.game} stage={props.stage} />
+        <GameScreen game={props.game} />
       </div>
     )
   }
