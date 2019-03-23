@@ -33,13 +33,11 @@ type Props = { stage: GameStage }
 const StageLayer: React.SFC<Props> = ({ stage }) => {
   return (
     <>
-      {_.map(stage.cells, lineCells => (
-        <>
-          {_.map(lineCells, cell => (
-            <CellSprite key={cell.id} cell={cell} />
-          ))}
-        </>
-      ))}
+      {_.flatten(
+        _.map(stage.cells, lineCells =>
+          _.map(lineCells, cell => <CellSprite key={cell.id} cell={cell} />)
+        )
+      )}
     </>
   )
 }

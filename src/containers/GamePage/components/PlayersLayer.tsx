@@ -16,6 +16,7 @@ const PlayersLayer: React.SFC<Props> = props => {
     <>
       {players.map(player => (
         <Sprite
+          key={player.id}
           texture={Texture.fromImage(playerImg)}
           x={player.position.sx}
           y={player.position.sy}
