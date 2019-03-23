@@ -5,11 +5,13 @@ import { RouteComponentProps, RouterProps } from 'react-router'
 import { windowControlInit } from '../../store/Control/operations'
 import { setupLoop } from '../../store/Game/operations'
 import { getGameState } from '../../store/Game/selectors'
-import { GameState, State } from '../../types'
+import { getStage } from '../../store/Stage/selectors'
+import { GameState, Stage, State } from '../../types'
 import GameScreen from './components/GameScreen'
 
 type Props = {
   game: GameState
+  stage: Stage
   room: string
   windowControlInit: () => void
   setupLoop: () => void
@@ -29,7 +31,7 @@ class GamePage extends React.Component<Props> {
       <div>
         {/* <h4>ゲームページです</h4>
         <h5>ルーム: {props.room}</h5> */}
-        <GameScreen game={props.game} />
+        <GameScreen game={props.game} stage={props.stage} />
       </div>
     )
   }
@@ -40,6 +42,7 @@ type OProps = RouteComponentProps<{ room: string }>
 // <GamePage hoge="" />
 type SProps = {
   game: GameState
+  stage: Stage
 }
 type DProps = {
   setupLoop: () => void
@@ -49,6 +52,7 @@ type DProps = {
 export default connect<SProps, DProps, OProps, State>(
   (state, ownProps) => ({
     game: getGameState(state),
+    stage: getStage(state),
     room: ownProps.match.params.room,
   }),
   { windowControlInit, setupLoop }

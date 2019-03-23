@@ -3,19 +3,25 @@ import * as React from 'react'
 import { Stage } from 'react-pixi-fiber'
 
 import { Point } from 'pixi.js'
-import { GameProgressState, GameState } from '../../../types'
+import {
+  GameProgressState,
+  GameState,
+  Stage as GameStage,
+} from '../../../types'
 import PlayersLayer from './PlayersLayer'
 import StageLayer from './StageLayer'
 
 type Props = {
   game: GameState
+  stage: GameStage
 }
 
 const GameProgressScreen: React.SFC<{
   game: GameProgressState
-}> = ({ game }) => {
-  const width = game.stage.cw * 24
-  const height = game.stage.ch * 24
+  stage: GameStage
+}> = ({ game, stage }) => {
+  const width = stage.cw * 24
+  const height = stage.ch * 24
   const screenWidth = window.innerWidth
   const screenHeight = window.innerHeight
   // 画面の比率が縦に長過ぎるか？
@@ -32,7 +38,7 @@ const GameProgressScreen: React.SFC<{
         scale={new Point(scale, scale)}
         options={{ backgroundColor: 0x10bb99 }}
       >
-        <StageLayer stage={game.stage} />
+        <StageLayer stage={stage} />
         <PlayersLayer players={game.players} />
       </Stage>
     </div>
@@ -42,7 +48,7 @@ const GameProgressScreen: React.SFC<{
 const GameScreen: React.SFC<Props> = props => {
   const { game } = props
   if (game.processType === 'progress') {
-    return <GameProgressScreen game={game} />
+    return <GameProgressScreen game={game} stage={props.stage} />
   } else {
     return <div>終了</div>
   }
