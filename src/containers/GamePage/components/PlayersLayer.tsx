@@ -20,6 +20,7 @@ const PlayersLayer: React.SFC<Props> = props => {
           texture={Texture.fromImage(playerImg)}
           x={player.position.sx}
           y={player.position.sy}
+          rotation={-player.radian + Math.PI / 2}
         />
       ))}
     </>
