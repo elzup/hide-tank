@@ -16,9 +16,6 @@ export function loop(): ThunkAction {
 export function setupLoop(): ThunkAction {
   return dispatch => {
     setInterval(() => {
-      dispatch(shotBullet())
-    }, 5000)
-    setInterval(() => {
       dispatch(loop())
     }, 32)
   }
