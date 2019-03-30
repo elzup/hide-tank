@@ -1,20 +1,18 @@
 import config from '../../config'
 import { Bullet, ThunkAction } from '../../types'
 import { radian2xy } from '../../utils'
-import { updatePlayerBullet } from '../PlayerById/actions'
+import { addPlayerBullet } from '../PlayerById/actions'
 import { getMyPlayers } from '../PlayerById/selectors'
 import { receiveBullet } from './actions'
 import { getMyBullets } from './selectors'
 
 export function shotBullet(): ThunkAction {
   return async (dispatch, getState) => {
-    // player 取り出し
     const player = getMyPlayers(getState())
+    if (player.wepon.amount <= 0) {
+      return // 弾切れ
+    }
     const { radian, position } = player
-    // 残弾数チェック
-    // TODO: player.wepon.amount
-    // Bullet obj
-    // radian から dx, dy
     const bullet: Bullet = {
       id: +Date.now(),
       position,
@@ -25,8 +23,12 @@ export function shotBullet(): ThunkAction {
     }
 
     await dispatch(receiveBullet(bullet))
-    dispatch(updatePlayerBullet({ playerId: player.id, bulletId: bullet.id }))
-    // player.bullets に追加
+    dispatch(
+      addPlayerBullet({
+        playerId: player.id,
+        bulletId: bullet.id,
+      })
+    )
   }
 }
 

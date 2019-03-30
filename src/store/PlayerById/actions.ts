@@ -4,7 +4,7 @@ import { Player } from '../../types'
 
 export const receivePlayer = actionCreator<Player>('receivePlayer')
 export const updatePlayer = actionCreator<Player>('updatePlayer')
-export const updatePlayerBullet = actionCreator<{
+export const addPlayerBullet = actionCreator<{
   playerId: number
   bulletId: number
-}>('updatePlayerBullet')
+}>('addPlayerBullet')
