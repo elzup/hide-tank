@@ -1,5 +1,6 @@
 import config from '../../config'
 import { Bullet, ThunkAction } from '../../types'
+import { updatePlayerBullet } from '../PlayerById/actions'
 import { receiveBullet } from './actions'
 import { getMyPlayers } from './selectors'
 
@@ -13,7 +14,7 @@ export function shotBullet(): ThunkAction {
     // Bullet obj
     // radian から dx, dy
     const bullet: Bullet = {
-      id: 1, // TODO: id を振る
+      id: +Date.now(),
       position,
       velosity: 1,
       radian,
@@ -22,6 +23,7 @@ export function shotBullet(): ThunkAction {
     }
 
     await dispatch(receiveBullet(bullet))
+    dispatch(updatePlayerBullet({ playerId: player.id, bulletId: bullet.id }))
     // player.bullets に追加
   }
 }
