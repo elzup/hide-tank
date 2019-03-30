@@ -27,6 +27,7 @@ export function loopPlayers(): ThunkAction {
       const { x, y } = radian2xy(radian)
       const newPlayer: Player = {
         ...player,
+        radian,
         position: {
           sx: player.position.sx + x * speedRate,
           sy: player.position.sy + y * speedRate,

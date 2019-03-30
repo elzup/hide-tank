@@ -56,6 +56,7 @@ export type Player = {
     pr: number
   }
   hp: number // 10
+  radian: number
   speedType: SpeedType
   speed: number
 }

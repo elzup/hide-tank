@@ -27,6 +27,7 @@ const initialState: State = {
     },
     hp: 10,
     speedType: 'stop',
+    radian: 0,
     speed: 0,
   },
 }
