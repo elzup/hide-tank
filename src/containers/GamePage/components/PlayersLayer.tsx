@@ -2,8 +2,9 @@ import _ from 'lodash'
 import * as React from 'react'
 import { Sprite } from 'react-pixi-fiber'
 
-import { Texture } from 'pixi.js'
+import { Point, Texture } from 'pixi.js'
 import playerImg from '../../../components/res/player.png'
+import config from '../../../config'
 import { Player } from '../../../types'
 
 type Props = {
@@ -20,6 +21,8 @@ const PlayersLayer: React.SFC<Props> = props => {
           texture={Texture.fromImage(playerImg)}
           x={player.position.sx}
           y={player.position.sy}
+          pivot={new Point(config.cellSize / 2, config.cellSize / 2)}
+          // rotation={-player.radian + Math.PI / 2} // TODO: tuning
         />
       ))}
     </>

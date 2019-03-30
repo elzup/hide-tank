@@ -34,10 +34,11 @@ type Wepon = {
   // power: number
 }
 
-type Bullet = {
+export type Bullet = {
+  id: number
   position: StagePosition
-  velosity: StagePosition
-  velosityRadian: number
+  velosity: number
+  radian: number
   hp: number
   pr: number
 }
@@ -49,12 +50,13 @@ export type Player = {
   wepon: {
     weponId: number
     amount: number
-    bullets: Bullet[]
+    bulletIds: number[]
   }
   vision: {
     pr: number
   }
   hp: number // 10
+  radian: number
   speedType: SpeedType
   speed: number
 }

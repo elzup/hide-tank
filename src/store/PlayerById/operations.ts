@@ -1,11 +1,8 @@
 import { Player, ThunkAction } from '../../types'
+import { radian2xy } from '../../utils'
 import { getControl } from '../Control/selectors'
 import { updatePlayer } from './actions'
 import { getMyPlayers } from './selectors'
-
-const radian2xy = (radian: number): { x: number; y: number } => {
-  return { x: Math.cos(radian), y: -Math.sin(radian) }
-}
 
 const speedTypeRate: { [speedType: string]: number } = {
   stop: 0,
@@ -27,6 +24,7 @@ export function loopPlayers(): ThunkAction {
       const { x, y } = radian2xy(radian)
       const newPlayer: Player = {
         ...player,
+        radian,
         position: {
           sx: player.position.sx + x * speedRate,
           sy: player.position.sy + y * speedRate,
