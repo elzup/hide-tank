@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { reducer as BulletById } from './store/BulletById/reducer'
 import { reducer as Control } from './store/Control/reducer'
 import { reducer as Game } from './store/Game/reducer'
 import { reducer as PlayerById } from './store/PlayerById/reducer'
@@ -12,4 +13,5 @@ export const rootReducer = combineReducers<State>({
   Stage,
   Control,
   PlayerById,
+  BulletById,
 })

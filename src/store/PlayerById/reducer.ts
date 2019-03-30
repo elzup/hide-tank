@@ -20,7 +20,7 @@ const initialState: State = {
     wepon: {
       weponId: 0,
       amount: 3,
-      bullets: [],
+      bulletIds: [],
     },
     vision: {
       pr: config.cellSize * 20,
