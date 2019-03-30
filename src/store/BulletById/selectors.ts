@@ -1,14 +1,20 @@
 import _ from 'lodash'
 import { State } from '../../types'
+import { getAllPlayers } from '../PlayerById/selectors'
 
-export const getGameState = (state: State) => {
-  return state.Game
+export const getBullets = (state: State) => {
+  return _.values(state.BulletById)
 }
 
-export const getPlayers = (state: State) => {
-  return _.values(state.PlayerById)
+export const getBullet = (state: State, id: number) => {
+  return state.BulletById[id]
 }
 
-export const getMyPlayers = (state: State) => {
-  return state.PlayerById[0]
+export const getAllBulletIds = (state: State) => {
+  const players = getAllPlayers(state)
+  return _.flatten(players.map(player => player.wepon.bulletIds))
+}
+
+export const getAllBullets = (state: State) => {
+  return getAllBulletIds(state).map(id => getBullet(state, id))
 }

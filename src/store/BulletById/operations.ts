@@ -1,8 +1,8 @@
 import config from '../../config'
 import { Bullet, ThunkAction } from '../../types'
 import { updatePlayerBullet } from '../PlayerById/actions'
+import { getMyPlayers } from '../PlayerById/selectors'
 import { receiveBullet } from './actions'
-import { getMyPlayers } from './selectors'
 
 export function shotBullet(): ThunkAction {
   return async (dispatch, getState) => {

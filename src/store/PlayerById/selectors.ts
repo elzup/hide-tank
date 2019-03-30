@@ -5,7 +5,7 @@ export const getGameState = (state: State) => {
   return state.Game
 }
 
-export const getPlayers = (state: State) => {
+export const getAllPlayers = (state: State) => {
   return _.values(state.PlayerById)
 }
 

@@ -1,4 +1,5 @@
 import { ThunkAction } from '../../types'
+import { shotBullet } from '../BulletById/operations'
 import { loopPlayers } from '../PlayerById/operations'
 import { getGameState } from './selectors'
 
@@ -17,6 +18,7 @@ export function loop(): ThunkAction {
 
 export function setupLoop(): ThunkAction {
   return dispatch => {
+    dispatch(shotBullet())
     setInterval(() => {
       dispatch(loop())
     }, 32)
