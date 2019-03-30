@@ -1,5 +1,5 @@
 import { ThunkAction } from '../../types'
-import { shotBullet } from '../BulletById/operations'
+import { loopBullets, shotBullet } from '../BulletById/operations'
 import { loopPlayers } from '../PlayerById/operations'
 import { getGameState } from './selectors'
 
@@ -12,13 +12,16 @@ export function loop(): ThunkAction {
     const game = getGameState(getState())
     if (game.processType === 'progress') {
       dispatch(loopPlayers())
+      dispatch(loopBullets())
     }
   }
 }
 
 export function setupLoop(): ThunkAction {
   return dispatch => {
-    dispatch(shotBullet())
+    setInterval(() => {
+      dispatch(shotBullet())
+    }, 5000)
     setInterval(() => {
       dispatch(loop())
     }, 32)

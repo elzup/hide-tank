@@ -22,7 +22,7 @@ const PlayersLayer: React.SFC<Props> = props => {
           x={player.position.sx}
           y={player.position.sy}
           pivot={new Point(config.cellSize / 2, config.cellSize / 2)}
-          rotation={-player.radian + Math.PI / 2}
+          // rotation={-player.radian + Math.PI / 2} // TODO: tuning
         />
       ))}
     </>

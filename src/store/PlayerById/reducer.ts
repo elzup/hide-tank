@@ -43,7 +43,7 @@ export const reducer = reducerWithInitialState<State>(initialState)
   .case(actions.updatePlayerBullet, (state, obj) => {
     const player = {
       wepon: {
-        bulletIds: [obj.bulletId],
+        bulletIds: [...state[obj.playerId].wepon.bulletIds, obj.bulletId],
       },
     }
     return _.merge({}, state, { [obj.playerId]: player })
