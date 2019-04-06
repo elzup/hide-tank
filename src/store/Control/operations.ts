@@ -1,6 +1,13 @@
 import { MoveStick, SpeedType, ThunkAction } from '../../types'
-import { endMoveStick, startMoveStick, updateMoveStick } from './actions'
+import {
+  endMoveStick,
+  startMoveStick,
+  updateMoveStick,
+  endBulletButton,
+  startBulletButton,
+} from './actions'
 import { getControl } from './selectors'
+import { shotBullet } from '../BulletById/operations'
 
 const judgeSpeedType = (r, threshold): SpeedType => {
   if (r <= threshold / 2) {
@@ -24,6 +31,9 @@ export function windowControlInit(): ThunkAction {
         // TODO: 画面の左半分か
         if (x < window.innerWidth / 2) {
           dispatch(startMoveStick({ x, y }))
+        } else if (x >= window.innerWidth / 2) {
+          dispatch(startBulletButton())
+          dispatch(shotBullet())
         }
       })
     })
@@ -37,6 +47,9 @@ export function windowControlInit(): ThunkAction {
       // TODO: 画面の左半分か
       if (x < window.innerWidth / 2) {
         dispatch(startMoveStick({ x, y }))
+      } else if (x >= window.innerWidth / 2) {
+        dispatch(startBulletButton())
+        dispatch(shotBullet())
       }
     })
     window.addEventListener('mousemove', e => {
@@ -71,6 +84,9 @@ export function windowControlInit(): ThunkAction {
       if (control.moveStick.active) {
         dispatch(endMoveStick())
       }
+      if (control.bulletButton) {
+        dispatch(endBulletButton())
+      }
     })
     window.addEventListener('touchend', e => {
       const control = getControl(getState())
@@ -79,6 +95,9 @@ export function windowControlInit(): ThunkAction {
       }
       if (control.moveStick.active) {
         dispatch(endMoveStick())
+      }
+      if (control.bulletButton) {
+        dispatch(endBulletButton())
       }
     })
   }
