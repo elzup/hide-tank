@@ -1,13 +1,16 @@
 import { MoveStick, SpeedType, ThunkAction } from '../../types'
+
+import { xy2radian } from '../../utils'
 import {
+  endBulletButton,
   endMoveStick,
+  startBulletButton,
   startMoveStick,
   updateMoveStick,
-  endBulletButton,
-  startBulletButton,
 } from './actions'
-import { getControl } from './selectors'
+
 import { shotBullet } from '../BulletById/operations'
+import { getControl } from './selectors'
 
 const judgeSpeedType = (r, threshold): SpeedType => {
   if (r <= threshold / 2) {
@@ -115,7 +118,7 @@ const calcMoveStick = (
   const dy = y - moveStick.startPosition.y
   const dr = Math.sqrt(dx * dx + dy * dy)
   const speedType = judgeSpeedType(dr, window.innerWidth / 8)
-  const radian = Math.atan2(-dy, dx)
+  const radian = xy2radian(dx, dy)
 
   return {
     ...moveStick,

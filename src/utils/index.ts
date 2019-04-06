@@ -6,3 +6,7 @@ export const genRnadom = () =>
 export const radian2xy = (radian: number): { x: number; y: number } => {
   return { x: Math.cos(radian), y: -Math.sin(radian) }
 }
+
+export const xy2radian = (x: number, y: number): number => {
+  return Math.atan2(-y, x)
+}
