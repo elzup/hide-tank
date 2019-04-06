@@ -11,3 +11,7 @@ export const startMoveStick = actionCreator<{
 export const updateMoveStick = actionCreator<MoveStick>('updateMoveStick')
 
 export const endMoveStick = actionCreator('endMoveStick')
+
+export const startBulletButton = actionCreator('startBulletButton')
+
+export const endBulletButton = actionCreator('endBulletButton')
