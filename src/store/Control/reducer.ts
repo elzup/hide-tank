@@ -35,3 +35,10 @@ export const reducer = reducerWithInitialState<State>(initialState)
   .case(actions.endMoveStick, state => {
     return _.merge({}, state, { moveStick: { active: false } })
   })
+  .case(actions.startBulletButton, state => {
+    const bulletButton = { active: true }
+    return _.merge({}, state, { bulletButton })
+  })
+  .case(actions.endBulletButton, state => {
+    return _.merge({}, state, { bulletButton: { active: false } })
+  })
