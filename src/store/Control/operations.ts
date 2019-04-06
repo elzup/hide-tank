@@ -1,4 +1,5 @@
 import { MoveStick, SpeedType, ThunkAction } from '../../types'
+import { xy2radian } from '../../utils'
 import { endMoveStick, startMoveStick, updateMoveStick } from './actions'
 import { getControl } from './selectors'
 
@@ -96,7 +97,7 @@ const calcMoveStick = (
   const dy = y - moveStick.startPosition.y
   const dr = Math.sqrt(dx * dx + dy * dy)
   const speedType = judgeSpeedType(dr, window.innerWidth / 8)
-  const radian = Math.atan2(-dy, dx)
+  const radian = xy2radian(dx, dy)
 
   return {
     ...moveStick,

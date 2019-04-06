@@ -37,8 +37,12 @@ type Wepon = {
 export type Bullet = {
   id: number
   position: StagePosition
-  velosity: number
-  radian: number
+  velosity: {
+    base: number
+    x: number
+    y: number
+    radian: number
+  }
   hp: number
   pr: number
 }
