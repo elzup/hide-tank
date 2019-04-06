@@ -45,8 +45,8 @@ export function loopBullets(): ThunkAction {
     const bullets = getMyBullets(state)
     bullets.map(bullet => {
       const { velosity } = bullet
-      const sx = bullet.position.sx + velosity.x
-      const sy = bullet.position.sy + velosity.y
+      let sx = bullet.position.sx + velosity.x
+      let sy = bullet.position.sy + velosity.y
       // 古いセル座標
       const ocx = Math.floor(bullet.position.sx / config.cellSize)
       const ocy = Math.floor(bullet.position.sy / config.cellSize)
@@ -56,17 +56,25 @@ export function loopBullets(): ThunkAction {
       let vx = velosity.x
       let vy = velosity.y
       let radian = velosity.radian
-      if (ocx !== ncx || ocy !== ncy) {
-        const cell = getCell(state, ncy, ncx)
+      let reflect = false
+      if (ocx !== ncx) {
+        const cell = getCell(state, ocy, ncx)
         if (cell.type === 'wall') {
-          if (ocx !== ncx) {
-            vx *= -1
-          }
-          if (ocy !== ncy) {
-            vy *= -1
-          }
-          radian = xy2radian(vx, vy)
+          reflect = true
+          vx *= -1
+          sx -= velosity.x
         }
+      }
+      if (ocy !== ncy) {
+        const cell = getCell(state, ncy, ocx)
+        if (cell.type === 'wall') {
+          reflect = true
+          vy *= -1
+          sy -= velosity.y
+        }
+      }
+      if (reflect) {
+        radian = xy2radian(vx, vy)
       }
 
       const newBullet: Bullet = {
