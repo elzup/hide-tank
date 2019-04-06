@@ -3,6 +3,7 @@ import { Bullet, ThunkAction } from '../../types'
 import { radian2xy } from '../../utils'
 import { addPlayerBullet } from '../PlayerById/actions'
 import { getMyPlayers } from '../PlayerById/selectors'
+import { getCell, getStage } from '../Stage/selectors'
 import { receiveBullet } from './actions'
 import { getMyBullets } from './selectors'
 
@@ -38,13 +39,26 @@ export function loopBullets(): ThunkAction {
     bullets.map(bullet => {
       const { radian, velosity } = bullet
       const { x, y } = radian2xy(radian)
+      const sx = bullet.position.sx + x * velosity
+      const sy = bullet.position.sy + y * velosity
+      // 古いセル座標
+      const ocx = Math.floor(bullet.position.sx / config.cellSize)
+      const ocy = Math.floor(bullet.position.sy / config.cellSize)
+      // 新しいセル座標
+      const ncx = Math.floor(sx / config.cellSize)
+      const ncy = Math.floor(sy / config.cellSize)
+      let newRadian = bullet.radian
+      if (ocx !== ncx || ocy !== ncy) {
+        const cell = getCell(getState(), ncy, ncx)
+        if (cell.type === 'wall') {
+          newRadian += Math.PI
+        }
+      }
 
       const newBullet: Bullet = {
         ...bullet,
-        position: {
-          sx: bullet.position.sx + x * velosity,
-          sy: bullet.position.sy + y * velosity,
-        },
+        position: { sx, sy },
+        radian: newRadian,
       }
       dispatch(receiveBullet(newBullet))
     })
