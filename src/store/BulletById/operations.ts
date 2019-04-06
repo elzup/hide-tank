@@ -1,5 +1,6 @@
+import { number } from 'prop-types'
 import config from '../../config'
-import { Bullet, ThunkAction } from '../../types'
+import { Bullet, BulletVelosity, Cell, ThunkAction } from '../../types'
 import { radian2xy, xy2radian } from '../../utils'
 import { addPlayerBullet } from '../PlayerById/actions'
 import { getMyPlayers } from '../PlayerById/selectors'
@@ -39,53 +40,87 @@ export function shotBullet(): ThunkAction {
   }
 }
 
+function calcBulletCollision(
+  bullet: Bullet,
+  nextCellX: Cell,
+  nextCellY: Cell,
+  ocp: {
+    x: number
+    y: number
+  },
+  ncp: {
+    x: number
+    y: number
+  }
+): {
+  fixSx: number
+  fixSy: number
+  velosity: BulletVelosity
+} {
+  let reflect = false
+  let radian = bullet.velosity.radian
+  const { velosity } = bullet
+  let vx = velosity.x
+  let vy = velosity.y
+  let fixSx = 0
+  let fixSy = 0
+  if (ocp.x !== ncp.x) {
+    if (nextCellX.type === 'wall') {
+      reflect = true
+      vx *= -1
+      fixSx = -velosity.x
+    }
+  }
+  if (ocp.y !== ncp.y) {
+    if (nextCellY.type === 'wall') {
+      reflect = true
+      vy *= -1
+      fixSy = -velosity.y
+    }
+  }
+  if (reflect) {
+    radian = xy2radian(vx, vy)
+  }
+  return {
+    fixSx,
+    fixSy,
+    velosity: {
+      ...velosity,
+      x: vx,
+      y: vy,
+      radian,
+    },
+  }
+}
+
 export function loopBullets(): ThunkAction {
   return async (dispatch, getState) => {
     const state = getState()
     const bullets = getMyBullets(state)
     bullets.map(bullet => {
       const { velosity } = bullet
-      let sx = bullet.position.sx + velosity.x
-      let sy = bullet.position.sy + velosity.y
+      const sx = bullet.position.sx + velosity.x
+      const sy = bullet.position.sy + velosity.y
       // 古いセル座標
       const ocx = Math.floor(bullet.position.sx / config.cellSize)
       const ocy = Math.floor(bullet.position.sy / config.cellSize)
       // 新しいセル座標
       const ncx = Math.floor(sx / config.cellSize)
       const ncy = Math.floor(sy / config.cellSize)
-      let vx = velosity.x
-      let vy = velosity.y
-      let radian = velosity.radian
-      let reflect = false
-      if (ocx !== ncx) {
-        const cell = getCell(state, ocy, ncx)
-        if (cell.type === 'wall') {
-          reflect = true
-          vx *= -1
-          sx -= velosity.x
-        }
-      }
-      if (ocy !== ncy) {
-        const cell = getCell(state, ncy, ocx)
-        if (cell.type === 'wall') {
-          reflect = true
-          vy *= -1
-          sy -= velosity.y
-        }
-      }
-      if (reflect) {
-        radian = xy2radian(vx, vy)
-      }
+      const nextCellX = getCell(state, ocy, ncx)
+      const nextCellY = getCell(state, ncy, ocx)
+      const calced = calcBulletCollision(
+        bullet,
+        nextCellX,
+        nextCellY,
+        { x: ocx, y: ocy },
+        { x: ncx, y: ncy }
+      )
 
       const newBullet: Bullet = {
         ...bullet,
-        position: { sx, sy },
-        velosity: {
-          ...velosity,
-          x: vx,
-          y: vy,
-          radian,
-        },
+        position: { sx: sx + calced.fixSx, sy: sy + calced.fixSy },
+        velosity: calced.velosity,
       }
       dispatch(receiveBullet(newBullet))
     })
