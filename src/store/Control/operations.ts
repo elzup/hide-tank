@@ -10,7 +10,11 @@ import {
 } from './actions'
 
 import { shotBullet } from '../BulletById/operations'
-import { getControl } from './selectors'
+import {
+  getBulletButtonTouchId,
+  getControl,
+  getMoveStickTouchId,
+} from './selectors'
 
 const judgeSpeedType = (r, threshold): SpeedType => {
   if (r <= threshold / 2) {
@@ -27,22 +31,24 @@ function isDisplayLeft(x: number) {
 export function windowControlInit(): ThunkAction {
   return (dispatch, getState) => {
     window.addEventListener('touchstart', e => {
-      const control = getControl(getState())
-      const moveStickTouchId = control.moveStick.active
-        ? control.moveStick.touchId
-        : false
+      const moveStickTouchId = getMoveStickTouchId(getState())
+      const bulletButtonTouchId = getBulletButtonTouchId(getState())
       Array.from(e.touches).map(touch => {
-        if (touch.identifier === moveStickTouchId) {
+        console.log(touch.identifier)
+        console.log({ bulletButtonTouchId })
+        if (
+          [bulletButtonTouchId, moveStickTouchId].includes(touch.identifier)
+        ) {
           return
         }
-        // touch.clientX
         const x = touch.clientX
         const y = touch.clientY
         const touchId = touch.identifier
         if (isDisplayLeft(x)) {
           dispatch(startMoveStick({ x, y, touchId }))
         } else {
-          dispatch(startBulletButton())
+          console.log('right start')
+          dispatch(startBulletButton({ touchId }))
           dispatch(shotBullet())
         }
       })
@@ -56,7 +62,7 @@ export function windowControlInit(): ThunkAction {
         dispatch(startMoveStick({ x, y, touchId: 0 }))
       } else {
         control.moveStick.active
-        dispatch(startBulletButton())
+        dispatch(startBulletButton({ touchId: 0 }))
         dispatch(shotBullet())
       }
     })
@@ -95,15 +101,18 @@ export function windowControlInit(): ThunkAction {
     })
     window.addEventListener('touchend', e => {
       const control = getControl(getState())
-      const { moveStick } = control
+      const { moveStick, bulletButton } = control
       console.log(e.touches)
       if (moveStick.active) {
         if (!e.touches[moveStick.touchId]) {
           dispatch(endMoveStick())
         }
       }
-      if (control.bulletButton) {
-        dispatch(endBulletButton())
+      if (bulletButton.active) {
+        if (!e.touches[bulletButton.touchId || -1]) {
+          console.log('right end')
+          dispatch(endBulletButton())
+        }
       }
     })
   }

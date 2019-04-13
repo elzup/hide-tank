@@ -108,6 +108,7 @@ export type Control = {
   moveStick: MoveStick
   bulletButton: {
     active: boolean
+    touchId?: number
   }
 }
 
