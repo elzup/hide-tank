@@ -66,10 +66,10 @@ export function loopPlayers(): ThunkAction {
       const nextCellX = getCell(state, ocy, ncx)
       const nextCellY = getCell(state, ncy, ocx)
       const nextCellXY = getCell(state, ncy, ncx)
-      const collision = collisionCellPlayer(ncxpre, ncypre, nextCellXY)
+      // const collision = collisionCellPlayer(ncxpre, ncypre, nextCellXY)
 
-      const sx = nextCellX.type === 'wall' || collision ? osx : nsx
-      const sy = nextCellY.type === 'wall' || collision ? osy : nsy
+      const sx = nextCellX.type === 'wall' ? osx : nsx
+      const sy = nextCellY.type === 'wall' ? osy : nsy
 
       const newPlayer: Player = {
         ...player,
