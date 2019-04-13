@@ -7,7 +7,3 @@ export const startMoveStick = actionCreator<{
   x: number
   y: number
 }>('startMoveStick')
-
-export const updateMoveStick = actionCreator<MoveStick>('updateMoveStick')
-
-export const endMoveStick = actionCreator('endMoveStick')

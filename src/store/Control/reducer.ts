@@ -18,27 +18,28 @@ export const reducer = reducerWithInitialState<State>(initialState)
   .case(actions.saveControl, (state, control) => {
     return { ...state, ...control }
   })
-  .case(actions.startMoveStick, (state, { x, y }) => {
+  .case(actions.startMoveStick, (state, { x, y, touchId }) => {
     const moveStick: MoveStick = {
       active: true,
+      touchId,
       startPosition: { x, y },
       currentPosition: { x, y },
       diffPosition: { x: 0, y: 0 },
       speedType: 'stop',
       radian: 0,
     }
-    return _.merge({}, state, { moveStick })
+    return { ...state, moveStick }
   })
   .case(actions.updateMoveStick, (state, moveStick) => {
-    return _.merge({}, state, { moveStick })
+    return { ...state, moveStick }
   })
   .case(actions.endMoveStick, state => {
-    return _.merge({}, state, { moveStick: { active: false } })
+    return { ...state, moveStick: { active: false } }
   })
-  .case(actions.startBulletButton, state => {
-    const bulletButton = { active: true }
-    return _.merge({}, state, { bulletButton })
+  .case(actions.startBulletButton, (state, { touchId }) => {
+    const bulletButton = { active: true, touchId }
+    return { ...state, bulletButton }
   })
   .case(actions.endBulletButton, state => {
-    return _.merge({}, state, { bulletButton: { active: false } })
+    return { ...state, bulletButton: { active: false } }
   })

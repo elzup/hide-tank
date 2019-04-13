@@ -10,7 +10,11 @@ import {
 } from './actions'
 
 import { shotBullet } from '../BulletById/operations'
-import { getControl } from './selectors'
+import {
+  getBulletButtonTouchId,
+  getControl,
+  getMoveStickTouchId,
+} from './selectors'
 
 const judgeSpeedType = (r, threshold): SpeedType => {
   if (r <= threshold / 2) {
@@ -19,39 +23,46 @@ const judgeSpeedType = (r, threshold): SpeedType => {
   return r <= threshold ? 'walk' : 'run'
 }
 
+function isDisplayLeft(x: number) {
+  return x < window.innerWidth / 2
+}
+
 // 'mousemove', 'mousemove'
 export function windowControlInit(): ThunkAction {
   return (dispatch, getState) => {
     window.addEventListener('touchstart', e => {
-      const control = getControl(getState())
-      if (!control) {
-        return
-      }
+      const moveStickTouchId = getMoveStickTouchId(getState())
+      const bulletButtonTouchId = getBulletButtonTouchId(getState())
       Array.from(e.touches).map(touch => {
-        // touch.clientX
+        console.log(touch.identifier)
+        console.log({ bulletButtonTouchId })
+        if (
+          [bulletButtonTouchId, moveStickTouchId].includes(touch.identifier)
+        ) {
+          return
+        }
         const x = touch.clientX
         const y = touch.clientY
-        // TODO: 画面の左半分か
-        if (x < window.innerWidth / 2) {
-          dispatch(startMoveStick({ x, y }))
-        } else if (x >= window.innerWidth / 2) {
-          dispatch(startBulletButton())
+        const touchId = touch.identifier
+        if (isDisplayLeft(x)) {
+          dispatch(startMoveStick({ x, y, touchId }))
+        } else {
+          console.log('right start')
+          dispatch(startBulletButton({ touchId }))
           dispatch(shotBullet())
         }
       })
     })
     window.addEventListener('mousedown', e => {
       const control = getControl(getState())
-      if (!control) {
-        return
-      }
       const x = e.clientX
       const y = e.clientY
-      // TODO: 画面の左半分か
+
       if (x < window.innerWidth / 2) {
-        dispatch(startMoveStick({ x, y }))
-      } else if (x >= window.innerWidth / 2) {
-        dispatch(startBulletButton())
+        dispatch(startMoveStick({ x, y, touchId: 0 }))
+      } else {
+        control.moveStick.active
+        dispatch(startBulletButton({ touchId: 0 }))
         dispatch(shotBullet())
       }
     })
@@ -67,17 +78,14 @@ export function windowControlInit(): ThunkAction {
     window.addEventListener('touchmove', e => {
       const state = getState()
       const control = getControl(state)
-      if (!control) {
+      const { moveStick } = control
+      if (!moveStick.active) {
         return
       }
-      const { moveStick } = control
-      Array.from(e.touches).map(touch => {
-        dispatch(
-          updateMoveStick(
-            calcMoveStick(moveStick, touch.clientX, touch.clientY)
-          )
-        )
-      })
+      const touch = e.touches[moveStick.touchId]
+      dispatch(
+        updateMoveStick(calcMoveStick(moveStick, touch.clientX, touch.clientY))
+      )
     })
     window.addEventListener('mouseup', e => {
       const control = getControl(getState())
@@ -93,14 +101,18 @@ export function windowControlInit(): ThunkAction {
     })
     window.addEventListener('touchend', e => {
       const control = getControl(getState())
-      if (!control) {
-        return
+      const { moveStick, bulletButton } = control
+      console.log(e.touches)
+      if (moveStick.active) {
+        if (!e.touches[moveStick.touchId]) {
+          dispatch(endMoveStick())
+        }
       }
-      if (control.moveStick.active) {
-        dispatch(endMoveStick())
-      }
-      if (control.bulletButton) {
-        dispatch(endBulletButton())
+      if (bulletButton.active) {
+        if (!e.touches[bulletButton.touchId || -1]) {
+          console.log('right end')
+          dispatch(endBulletButton())
+        }
       }
     })
   }

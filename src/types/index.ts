@@ -94,6 +94,7 @@ export type Position = {
 
 export type MoveStick =
   | {
+      touchId: number
       active: true
       startPosition: Position
       currentPosition: Position
@@ -107,6 +108,7 @@ export type Control = {
   moveStick: MoveStick
   bulletButton: {
     active: boolean
+    touchId?: number
   }
 }
 
