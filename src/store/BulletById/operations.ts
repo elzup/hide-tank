@@ -5,7 +5,7 @@ import { radian2xy, xy2radian } from '../../utils'
 import { addPlayerBullet } from '../PlayerById/actions'
 import { getMyPlayers } from '../PlayerById/selectors'
 import { getCell } from '../Stage/selectors'
-import { receiveBullet } from './actions'
+import { receiveBullet, removeBullet } from './actions'
 import { getMyBullets } from './selectors'
 
 export function shotBullet(): ThunkAction {
@@ -123,7 +123,6 @@ export function loopBullets(): ThunkAction {
         { x: ncx, y: ncy }
       )
 
-      console.log(calced.fixHp)
       if (calced.fixHp >= 0) {
         const newBullet: Bullet = {
           ...bullet,
@@ -132,6 +131,8 @@ export function loopBullets(): ThunkAction {
           hp: calced.fixHp,
         }
         dispatch(receiveBullet(newBullet))
+      } else {
+        dispatch(removeBullet(bullet.id))
       }
     })
   }

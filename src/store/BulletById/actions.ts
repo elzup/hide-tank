@@ -4,4 +4,4 @@ import { Bullet } from '../../types'
 
 export const receiveBullet = actionCreator<Bullet>('receiveBullet')
 export const updateBullet = actionCreator<Bullet>('updateBullet')
-export const removeBullet = actionCreator<Bullet>('removeBullet')
+export const removeBullet = actionCreator<number>('removeBullet')
