@@ -18,9 +18,10 @@ export const reducer = reducerWithInitialState<State>(initialState)
   .case(actions.saveControl, (state, control) => {
     return { ...state, ...control }
   })
-  .case(actions.startMoveStick, (state, { x, y }) => {
+  .case(actions.startMoveStick, (state, { x, y, touchId }) => {
     const moveStick: MoveStick = {
       active: true,
+      touchId,
       startPosition: { x, y },
       currentPosition: { x, y },
       diffPosition: { x: 0, y: 0 },

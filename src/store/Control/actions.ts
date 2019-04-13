@@ -6,6 +6,7 @@ export const saveControl = actionCreator<Control>('saveControl')
 export const startMoveStick = actionCreator<{
   x: number
   y: number
+  touchId: number
 }>('startMoveStick')
 
 export const updateMoveStick = actionCreator<MoveStick>('updateMoveStick')

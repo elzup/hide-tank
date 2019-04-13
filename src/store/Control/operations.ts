@@ -19,22 +19,29 @@ const judgeSpeedType = (r, threshold): SpeedType => {
   return r <= threshold ? 'walk' : 'run'
 }
 
+function isDisplayLeft(x: number) {
+  return x < window.innerWidth / 2
+}
+
 // 'mousemove', 'mousemove'
 export function windowControlInit(): ThunkAction {
   return (dispatch, getState) => {
     window.addEventListener('touchstart', e => {
       const control = getControl(getState())
-      if (!control) {
-        return
-      }
+      const moveStickTouchId = control.moveStick.active
+        ? control.moveStick.touchId
+        : false
       Array.from(e.touches).map(touch => {
+        if (touch.identifier === moveStickTouchId) {
+          return
+        }
         // touch.clientX
         const x = touch.clientX
         const y = touch.clientY
-        // TODO: 画面の左半分か
-        if (x < window.innerWidth / 2) {
-          dispatch(startMoveStick({ x, y }))
-        } else if (x >= window.innerWidth / 2) {
+        const touchId = touch.identifier
+        if (isDisplayLeft(x)) {
+          dispatch(startMoveStick({ x, y, touchId }))
+        } else {
           dispatch(startBulletButton())
           dispatch(shotBullet())
         }
@@ -42,15 +49,13 @@ export function windowControlInit(): ThunkAction {
     })
     window.addEventListener('mousedown', e => {
       const control = getControl(getState())
-      if (!control) {
-        return
-      }
       const x = e.clientX
       const y = e.clientY
-      // TODO: 画面の左半分か
+
       if (x < window.innerWidth / 2) {
-        dispatch(startMoveStick({ x, y }))
-      } else if (x >= window.innerWidth / 2) {
+        dispatch(startMoveStick({ x, y, touchId: 0 }))
+      } else {
+        control.moveStick.active
         dispatch(startBulletButton())
         dispatch(shotBullet())
       }
@@ -67,17 +72,14 @@ export function windowControlInit(): ThunkAction {
     window.addEventListener('touchmove', e => {
       const state = getState()
       const control = getControl(state)
-      if (!control) {
+      const { moveStick } = control
+      if (!moveStick.active) {
         return
       }
-      const { moveStick } = control
-      Array.from(e.touches).map(touch => {
-        dispatch(
-          updateMoveStick(
-            calcMoveStick(moveStick, touch.clientX, touch.clientY)
-          )
-        )
-      })
+      const touch = e.touches[moveStick.touchId]
+      dispatch(
+        updateMoveStick(calcMoveStick(moveStick, touch.clientX, touch.clientY))
+      )
     })
     window.addEventListener('mouseup', e => {
       const control = getControl(getState())
@@ -93,11 +95,12 @@ export function windowControlInit(): ThunkAction {
     })
     window.addEventListener('touchend', e => {
       const control = getControl(getState())
-      if (!control) {
-        return
-      }
-      if (control.moveStick.active) {
-        dispatch(endMoveStick())
+      const { moveStick } = control
+      console.log(e.touches)
+      if (moveStick.active) {
+        if (!e.touches[moveStick.touchId]) {
+          dispatch(endMoveStick())
+        }
       }
       if (control.bulletButton) {
         dispatch(endBulletButton())

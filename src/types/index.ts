@@ -94,6 +94,7 @@ export type Position = {
 
 export type MoveStick =
   | {
+      touchId: number
       active: true
       startPosition: Position
       currentPosition: Position
