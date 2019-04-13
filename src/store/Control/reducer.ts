@@ -28,18 +28,18 @@ export const reducer = reducerWithInitialState<State>(initialState)
       speedType: 'stop',
       radian: 0,
     }
-    return _.merge({}, state, { moveStick })
+    return { ...state, moveStick }
   })
   .case(actions.updateMoveStick, (state, moveStick) => {
-    return _.merge({}, state, { moveStick })
+    return { ...state, moveStick }
   })
   .case(actions.endMoveStick, state => {
-    return _.merge({}, state, { moveStick: { active: false } })
+    return { ...state, moveStick: { active: false } }
   })
-  .case(actions.startBulletButton, state => {
-    const bulletButton = { active: true }
-    return _.merge({}, state, { bulletButton })
+  .case(actions.startBulletButton, (state, { touchId }) => {
+    const bulletButton = { active: true, touchId }
+    return { ...state, bulletButton }
   })
   .case(actions.endBulletButton, state => {
-    return _.merge({}, state, { bulletButton: { active: false } })
+    return { ...state, bulletButton: { active: false } }
   })

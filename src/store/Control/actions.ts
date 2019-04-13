@@ -13,6 +13,8 @@ export const updateMoveStick = actionCreator<MoveStick>('updateMoveStick')
 
 export const endMoveStick = actionCreator('endMoveStick')
 
-export const startBulletButton = actionCreator('startBulletButton')
+export const startBulletButton = actionCreator<{ touchId?: number }>(
+  'startBulletButton'
+)
 
 export const endBulletButton = actionCreator('endBulletButton')
