@@ -1,5 +1,5 @@
 import config from '../../config'
-import { Player, ThunkAction } from '../../types'
+import { Cell, Player, ThunkAction } from '../../types'
 import { radian2xy, round01 } from '../../utils'
 import { getControl } from '../Control/selectors'
 import { getCell } from '../Stage/selectors'
@@ -10,6 +10,29 @@ const speedTypeRate: { [speedType: string]: number } = {
   stop: 0,
   walk: 2,
   run: 4,
+}
+
+function collisionR(r, x1, y1, x2, y2) {
+  const dx = x1 - x2
+  const dy = y1 - y2
+  return dx * dx + dy * dy >= r * r
+}
+
+function collisionCellPlayer(nsx: number, nsy: number, cell: Cell): boolean {
+  if (cell.type !== 'wall') {
+    return false
+  }
+  const r = config.cellSize / 2
+
+  const x = cell.position.cx * config.cellSize
+  const y = cell.position.cx * config.cellSize
+  const col = collisionR.bind(null, r, nsx, nsy)
+  return (
+    col(x + r, y + r) ||
+    col(x - r, y + r) ||
+    col(x - r, y - r) ||
+    col(x + r, y - r)
+  )
 }
 
 export function loopPlayers(): ThunkAction {
@@ -43,10 +66,10 @@ export function loopPlayers(): ThunkAction {
       const nextCellX = getCell(state, ocy, ncx)
       const nextCellY = getCell(state, ncy, ocx)
       const nextCellXY = getCell(state, ncy, ncx)
-      const sx =
-        nextCellX.type === 'wall' || nextCellXY.type === 'wall' ? osx : nsx
-      const sy =
-        nextCellY.type === 'wall' || nextCellXY.type === 'wall' ? osy : nsy
+      const collision = collisionCellPlayer(ncxpre, ncypre, nextCellXY)
+
+      const sx = nextCellX.type === 'wall' || collision ? osx : nsx
+      const sy = nextCellY.type === 'wall' || collision ? osy : nsy
 
       const newPlayer: Player = {
         ...player,
