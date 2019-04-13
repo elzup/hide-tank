@@ -56,6 +56,7 @@ function calcBulletCollision(
   fixSx: number
   fixSy: number
   velosity: BulletVelosity
+  fixHp: number
 } {
   let reflect = false
   let radian = bullet.velosity.radian
@@ -64,6 +65,9 @@ function calcBulletCollision(
   let vy = velosity.y
   let fixSx = 0
   let fixSy = 0
+  let nowHp = bullet.hp
+  let fixHp = bullet.hp
+  // ? 複数の変数を一度に宣言できないのか like $a = $b = 1
   if (ocp.x !== ncp.x) {
     if (nextCellX.type === 'wall') {
       reflect = true
@@ -80,6 +84,7 @@ function calcBulletCollision(
   }
   if (reflect) {
     radian = xy2radian(vx, vy)
+    fixHp = nowHp - 1
   }
   return {
     fixSx,
@@ -90,6 +95,7 @@ function calcBulletCollision(
       y: vy,
       radian,
     },
+    fixHp,
   }
 }
 
@@ -117,12 +123,16 @@ export function loopBullets(): ThunkAction {
         { x: ncx, y: ncy }
       )
 
-      const newBullet: Bullet = {
-        ...bullet,
-        position: { sx: sx + calced.fixSx, sy: sy + calced.fixSy },
-        velosity: calced.velosity,
+      console.log(calced.fixHp)
+      if (calced.fixHp >= 0) {
+        const newBullet: Bullet = {
+          ...bullet,
+          position: { sx: sx + calced.fixSx, sy: sy + calced.fixSy },
+          velosity: calced.velosity,
+          hp: calced.fixHp,
+        }
+        dispatch(receiveBullet(newBullet))
       }
-      dispatch(receiveBullet(newBullet))
     })
   }
 }
