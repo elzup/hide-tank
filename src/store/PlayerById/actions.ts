@@ -8,3 +8,7 @@ export const addPlayerBullet = actionCreator<{
   playerId: number
   bulletId: number
 }>('addPlayerBullet')
+export const removePlayerBullet = actionCreator<{
+  playerId: number
+  bulletId: number
+}>('removePlayerBullet')

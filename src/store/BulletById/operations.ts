@@ -2,10 +2,10 @@ import { number } from 'prop-types'
 import config from '../../config'
 import { Bullet, BulletVelosity, Cell, ThunkAction } from '../../types'
 import { radian2xy, xy2radian } from '../../utils'
-import { addPlayerBullet } from '../PlayerById/actions'
+import { addPlayerBullet, removePlayerBullet } from '../PlayerById/actions'
 import { getMyPlayers } from '../PlayerById/selectors'
 import { getCell } from '../Stage/selectors'
-import { receiveBullet } from './actions'
+import { receiveBullet, removeBullet } from './actions'
 import { getMyBullets } from './selectors'
 
 export function shotBullet(): ThunkAction {
@@ -56,6 +56,7 @@ function calcBulletCollision(
   fixSx: number
   fixSy: number
   velosity: BulletVelosity
+  fixHp: number
 } {
   let reflect = false
   let radian = bullet.velosity.radian
@@ -64,6 +65,9 @@ function calcBulletCollision(
   let vy = velosity.y
   let fixSx = 0
   let fixSy = 0
+  let nowHp = bullet.hp
+  let fixHp = bullet.hp
+  // ? 複数の変数を一度に宣言できないのか like $a = $b = 1
   if (ocp.x !== ncp.x) {
     if (nextCellX.type === 'wall') {
       reflect = true
@@ -80,6 +84,7 @@ function calcBulletCollision(
   }
   if (reflect) {
     radian = xy2radian(vx, vy)
+    fixHp = nowHp - 1
   }
   return {
     fixSx,
@@ -90,14 +95,16 @@ function calcBulletCollision(
       y: vy,
       radian,
     },
+    fixHp,
   }
 }
 
 export function loopBullets(): ThunkAction {
   return async (dispatch, getState) => {
     const state = getState()
+    const player = getMyPlayers(getState())
     const bullets = getMyBullets(state)
-    bullets.map(bullet => {
+    bullets.map(async bullet => {
       const { velosity } = bullet
       const sx = bullet.position.sx + velosity.x
       const sy = bullet.position.sy + velosity.y
@@ -117,12 +124,20 @@ export function loopBullets(): ThunkAction {
         { x: ncx, y: ncy }
       )
 
-      const newBullet: Bullet = {
-        ...bullet,
-        position: { sx: sx + calced.fixSx, sy: sy + calced.fixSy },
-        velosity: calced.velosity,
+      if (calced.fixHp >= 0) {
+        const newBullet: Bullet = {
+          ...bullet,
+          position: { sx: sx + calced.fixSx, sy: sy + calced.fixSy },
+          velosity: calced.velosity,
+          hp: calced.fixHp,
+        }
+        dispatch(receiveBullet(newBullet))
+      } else {
+        await dispatch(
+          removePlayerBullet({ playerId: player.id, bulletId: bullet.id })
+        )
+        await dispatch(removeBullet(bullet.id))
       }
-      dispatch(receiveBullet(newBullet))
     })
   }
 }

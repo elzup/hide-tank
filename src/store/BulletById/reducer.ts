@@ -7,9 +7,10 @@ export type State = { [id: number]: Bullet }
 
 const initialState: State = []
 
-export const reducer = reducerWithInitialState<State>(initialState).case(
-  actions.receiveBullet,
-  (state, obj) => {
+export const reducer = reducerWithInitialState<State>(initialState)
+  .case(actions.receiveBullet, (state, obj) => {
     return { ...state, [obj.id]: obj }
-  }
-)
+  })
+  .case(actions.removeBullet, (state, id) => {
+    return _.omit(state, [id])
+  })
