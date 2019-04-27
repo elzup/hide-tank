@@ -22,30 +22,43 @@ const GameProgressScreen = ({ stage, players, bullets }: Props) => {
   // 画面の比率が縦に長過ぎるか？
   // width / height > screenWidth / screenHeight
 
-  const isHeightOver = screenWidth > aspectRate * screenHeight
+  const isHeightOver = screenWidth < aspectRate * screenHeight
 
+  // 16:9 = w:h
+  // w = 1
+  // h = 16:9
   // console.log(isHeightOver ? '縦長' : '横長')
-  const screenSize = isHeightOver
+  const rate = isHeightOver ? 1 / aspectRate : aspectRate
+  const viewSize = isHeightOver
     ? {
-        width: '100%',
-        height: `${aspectRate * screenHeight}px`,
+        width: screenWidth,
+        height: screenWidth * rate,
       }
     : {
-        width: '100%',
-        height: '100vh',
+        width: screenHeight * rate,
+        height: screenHeight,
       }
-  const scale = 2
+
+  const scale = viewSize.width / 400
 
   const player = players[0]
+  console.log({ scale, viewSize })
+
   return (
-    <div style={{ ...screenSize, overflow: 'hidden' }}>
+    <div
+      style={{
+        width: `${viewSize.width}px`,
+        height: `${viewSize.height}px`,
+        overflow: 'hidden',
+      }}
+    >
       <Stage
-        width={screenWidth}
-        height={screenHeight}
+        width={viewSize.width}
+        height={viewSize.height}
         position={
           new Point(
-            -player.position.sx * scale + screenWidth / 2,
-            -player.position.sy * scale + screenHeight / 2
+            -player.position.sx * scale + viewSize.width / 2,
+            -player.position.sy * scale + viewSize.height / 2
           )
         }
         scale={new Point(scale, scale)}
