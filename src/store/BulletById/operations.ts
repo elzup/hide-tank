@@ -2,7 +2,7 @@ import { number } from 'prop-types'
 import config from '../../config'
 import { Bullet, BulletVelosity, Cell, ThunkAction } from '../../types'
 import { radian2xy, xy2radian } from '../../utils'
-import { addPlayerBullet } from '../PlayerById/actions'
+import { addPlayerBullet, removePlayerBullet } from '../PlayerById/actions'
 import { getMyPlayers } from '../PlayerById/selectors'
 import { getCell } from '../Stage/selectors'
 import { receiveBullet, removeBullet } from './actions'
@@ -102,6 +102,7 @@ function calcBulletCollision(
 export function loopBullets(): ThunkAction {
   return async (dispatch, getState) => {
     const state = getState()
+    const player = getMyPlayers(getState())
     const bullets = getMyBullets(state)
     bullets.map(bullet => {
       const { velosity } = bullet
@@ -132,7 +133,9 @@ export function loopBullets(): ThunkAction {
         }
         dispatch(receiveBullet(newBullet))
       } else {
-        dispatch(removeBullet(bullet.id))
+        dispatch(
+          removePlayerBullet({ playerId: player.id, bulletId: bullet.id })
+        )
       }
     })
   }
