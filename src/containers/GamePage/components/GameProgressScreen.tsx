@@ -47,27 +47,36 @@ const GameProgressScreen = ({ stage, players, bullets }: Props) => {
   return (
     <div
       style={{
-        width: `${viewSize.width}px`,
-        height: `${viewSize.height}px`,
-        overflow: 'hidden',
+        background: '#464646',
+        display: 'grid',
+        height: `100vh`,
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <Stage
-        width={viewSize.width}
-        height={viewSize.height}
-        position={
-          new Point(
-            -player.position.sx * scale + viewSize.width / 2,
-            -player.position.sy * scale + viewSize.height / 2
-          )
-        }
-        scale={new Point(scale, scale)}
-        options={{ backgroundColor: 0x10bb99 }}
+      <div
+        style={{
+          width: `${viewSize.width}px`,
+          height: `${viewSize.height}px`,
+        }}
       >
-        <StageLayer stage={stage} />
-        <PlayersLayer players={players} />
-        <BulletLayer bullets={bullets} />
-      </Stage>
+        <Stage
+          width={viewSize.width}
+          height={viewSize.height}
+          position={
+            new Point(
+              -player.position.sx * scale + viewSize.width / 2,
+              -player.position.sy * scale + viewSize.height / 2
+            )
+          }
+          scale={new Point(scale, scale)}
+          options={{ backgroundColor: 0x10bb99 }}
+        >
+          <StageLayer stage={stage} />
+          <PlayersLayer players={players} />
+          <BulletLayer bullets={bullets} />
+        </Stage>
+      </div>
     </div>
   )
 }
