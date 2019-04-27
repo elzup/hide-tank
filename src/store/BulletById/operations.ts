@@ -104,7 +104,7 @@ export function loopBullets(): ThunkAction {
     const state = getState()
     const player = getMyPlayers(getState())
     const bullets = getMyBullets(state)
-    bullets.map(bullet => {
+    bullets.map(async bullet => {
       const { velosity } = bullet
       const sx = bullet.position.sx + velosity.x
       const sy = bullet.position.sy + velosity.y
@@ -133,9 +133,10 @@ export function loopBullets(): ThunkAction {
         }
         dispatch(receiveBullet(newBullet))
       } else {
-        dispatch(
+        await dispatch(
           removePlayerBullet({ playerId: player.id, bulletId: bullet.id })
         )
+        await dispatch(removeBullet(bullet.id))
       }
     })
   }
