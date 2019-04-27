@@ -1,6 +1,5 @@
 import { MoveStick, SpeedType, ThunkAction } from '../../types'
 
-import { xy2radian } from '../../utils'
 import {
   endBulletButton,
   endMoveStick,
@@ -9,6 +8,7 @@ import {
   updateMoveStick,
 } from './actions'
 
+import { xy2radian } from '../../utils'
 import { shotBullet } from '../BulletById/operations'
 import {
   getBulletButtonTouchId,
