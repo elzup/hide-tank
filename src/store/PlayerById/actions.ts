@@ -3,7 +3,9 @@ const actionCreator = actionCreatorFactory()
 import { Player } from '../../types'
 
 export const receivePlayer = actionCreator<Player>('receivePlayer')
-export const updatePlayer = actionCreator<Player>('updatePlayer')
+export const updatePlayer = actionCreator<{ id: string } & Partial<Player>>(
+  'updatePlayer'
+)
 export const addPlayerBullet = actionCreator<{
   playerId: string
   bulletId: number

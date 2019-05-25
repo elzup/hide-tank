@@ -1,8 +1,10 @@
+import _ from 'lodash'
 import config from '../../config'
 import { Cell, Player, ThunkAction } from '../../types'
 import { radian2xy, round01 } from '../../utils'
 import { getControl } from '../Control/selectors'
 import { updateGameState } from '../Game/actions'
+import { emitUpdate } from '../Game/operations'
 import { getCell } from '../Stage/selectors'
 import { receivePlayer, updatePlayer } from './actions'
 import { getMyPlayer } from './selectors'
@@ -80,6 +82,10 @@ export function loopPlayers(): ThunkAction {
         radian,
         position: { sx, sy },
       }
+      emitUpdate({
+        player: _.pick(player, ['id', 'position', 'hp']),
+        bullets: [],
+      })
       await dispatch(updatePlayer(newPlayer))
     }
   }

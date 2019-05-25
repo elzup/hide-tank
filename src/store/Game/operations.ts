@@ -2,6 +2,7 @@ import io from 'socket.io-client'
 import config from '../../config'
 import { ThunkAction } from '../../types'
 import { loopBullets, shotBullet } from '../BulletById/operations'
+import { updatePlayer } from '../PlayerById/actions'
 import { createPlayer, loopPlayers } from '../PlayerById/operations'
 import { getGameState } from './selectors'
 
@@ -25,6 +26,14 @@ export function setupLoop(): ThunkAction {
   }
 }
 
+type UpdateData = {
+  player: { id: string; position: { sx: number; sy: number }; hp: number }
+  bullets: { id: number; x: number; y: number }[]
+}
+export function emitUpdate(data: UpdateData) {
+  socket.emit('update', data)
+}
+
 export function setupWebsocket(roomId: string): ThunkAction {
   return (dispatch, getState) => {
     socket.on('connect', () => {
@@ -43,6 +52,14 @@ export function setupWebsocket(roomId: string): ThunkAction {
         const enemyId = data.playerIds.filter(id => game.playerId != id)[0]
         dispatch(createPlayer(enemyId, false))
         // TODO: game state change
+      })
+      socket.on('update', (data: UpdateData) => {
+        if (data.player.id === getState().Game.playerId) {
+          return
+        }
+        console.log({ data })
+        dispatch(updatePlayer(data.player))
+        // update enemy player state
       })
     })
   }
