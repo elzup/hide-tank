@@ -3,14 +3,17 @@ import config from '../../config'
 import { Bullet, BulletVelosity, Cell, ThunkAction } from '../../types'
 import { radian2xy, xy2radian } from '../../utils'
 import { addPlayerBullet, removePlayerBullet } from '../PlayerById/actions'
-import { getMyPlayers } from '../PlayerById/selectors'
+import { getMyPlayer } from '../PlayerById/selectors'
 import { getCell } from '../Stage/selectors'
 import { receiveBullet, removeBullet } from './actions'
 import { getMyBullets } from './selectors'
 
 export function shotBullet(): ThunkAction {
   return async (dispatch, getState) => {
-    const player = getMyPlayers(getState())
+    const player = getMyPlayer(getState())
+    if (!player) {
+      return
+    }
     if (player.wepon.amount <= 0) {
       return // 弾切れ
     }
@@ -102,7 +105,10 @@ function calcBulletCollision(
 export function loopBullets(): ThunkAction {
   return async (dispatch, getState) => {
     const state = getState()
-    const player = getMyPlayers(getState())
+    const player = getMyPlayer(getState())
+    if (!player) {
+      return
+    }
     const bullets = getMyBullets(state)
     bullets.map(async bullet => {
       const { velosity } = bullet

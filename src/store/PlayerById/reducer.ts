@@ -5,33 +5,7 @@ import { Player } from '../../types'
 import * as actions from './actions'
 
 export type State = { [id: number]: Player }
-const cellPosition = {
-  cx: 27,
-  cy: 37,
-}
-
-const initialState: State = {
-  0: {
-    id: 0,
-    position: {
-      sx: config.cellSize * cellPosition.cx + config.cellSize / 2,
-      sy: config.cellSize * cellPosition.cy + config.cellSize / 2,
-    },
-    cellPosition,
-    wepon: {
-      weponId: 0,
-      amount: 3,
-      bulletIds: [],
-    },
-    vision: {
-      pr: config.cellSize * 20,
-    },
-    hp: 10,
-    speedType: 'stop',
-    radian: 0,
-    speed: 0,
-  },
-}
+const initialState: State = {}
 
 export const reducer = reducerWithInitialState<State>(initialState)
   .case(actions.receivePlayer, (state, obj) => {

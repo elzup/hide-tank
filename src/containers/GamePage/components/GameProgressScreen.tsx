@@ -13,10 +13,11 @@ const { aspectRate } = config
 type Props = {
   stage: GameStage
   players: Player[]
+  myPlayer: Player | undefined
   bullets: Bullet[]
 }
 
-const GameProgressScreen = ({ stage, players, bullets }: Props) => {
+const GameProgressScreen = ({ myPlayer, stage, players, bullets }: Props) => {
   const screenWidth = window.innerWidth
   const screenHeight = window.innerHeight
   // 画面の比率が縦に長過ぎるか？
@@ -40,8 +41,10 @@ const GameProgressScreen = ({ stage, players, bullets }: Props) => {
       }
 
   const scale = viewSize.width / 400
+  if (!myPlayer) {
+    return <span>接続中</span>
+  }
 
-  const player = players[0]
   // console.log({ scale, viewSize })
 
   return (
@@ -65,8 +68,8 @@ const GameProgressScreen = ({ stage, players, bullets }: Props) => {
           height={viewSize.height}
           position={
             new Point(
-              -player.position.sx * scale + viewSize.width / 2,
-              -player.position.sy * scale + viewSize.height / 2
+              -myPlayer.position.sx * scale + viewSize.width / 2,
+              -myPlayer.position.sy * scale + viewSize.height / 2
             )
           }
           scale={new Point(scale, scale)}

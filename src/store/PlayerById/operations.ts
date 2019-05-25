@@ -2,9 +2,10 @@ import config from '../../config'
 import { Cell, Player, ThunkAction } from '../../types'
 import { radian2xy, round01 } from '../../utils'
 import { getControl } from '../Control/selectors'
+import { updateGameState } from '../Game/actions'
 import { getCell } from '../Stage/selectors'
-import { updatePlayer } from './actions'
-import { getMyPlayers } from './selectors'
+import { receivePlayer, updatePlayer } from './actions'
+import { getMyPlayer } from './selectors'
 
 const speedTypeRate: { [speedType: string]: number } = {
   stop: 0,
@@ -45,7 +46,10 @@ export function loopPlayers(): ThunkAction {
     const { radian, speedType } = moveStick
     if (speedType !== 'stop') {
       const state = getState()
-      const player = getMyPlayers(getState())
+      const player = getMyPlayer(getState())
+      if (!player) {
+        return
+      }
       const speedRate = speedTypeRate[speedType] || 0
       const { x, y } = radian2xy(radian)
       const osx = player.position.sx
@@ -77,6 +81,48 @@ export function loopPlayers(): ThunkAction {
         position: { sx, sy },
       }
       await dispatch(updatePlayer(newPlayer))
+    }
+  }
+}
+
+const playerPosition = {
+  cx: 27,
+  cy: 37,
+}
+
+const enemyPosition = {
+  cx: 27,
+  cy: 37,
+}
+
+export function createPlayer(id: string, isMe: boolean): ThunkAction {
+  return async (dispatch, getState) => {
+    const cellPosition = isMe ? playerPosition : enemyPosition
+    const player: Player = {
+      id,
+      position: {
+        sx: config.cellSize * cellPosition.cx + config.cellSize / 2,
+        sy: config.cellSize * cellPosition.cy + config.cellSize / 2,
+      },
+      cellPosition,
+      wepon: {
+        weponId: 0,
+        amount: 3,
+        bulletIds: [],
+      },
+      vision: {
+        pr: config.cellSize * 20,
+      },
+      hp: 10,
+      speedType: 'stop',
+      radian: 0,
+      speed: 0,
+    }
+    dispatch(receivePlayer(player))
+    if (isMe) {
+      dispatch(updateGameState({ playerId: id }))
+    } else {
+      dispatch(updateGameState({ enemyId: id }))
     }
   }
 }

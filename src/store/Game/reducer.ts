@@ -1,12 +1,14 @@
 import _ from 'lodash'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import config from '../../config'
-import { GameState } from '../../types'
+import { GameProgressState } from '../../types'
 import * as actions from './actions'
 
-export type State = GameState
+export type State = GameProgressState
 
 const initialState: State = {
+  playerId: '',
+  enemyId: '',
   processType: 'progress',
   currentPlayerId: 0,
   timeLimit: config.timeLimit,
@@ -15,6 +17,6 @@ const initialState: State = {
 export const reducer = reducerWithInitialState<State>(initialState).case(
   actions.updateGameState,
   (state, payload) => {
-    return payload
+    return { ...state, ...payload }
   }
 )

@@ -5,10 +5,10 @@ import { Player } from '../../types'
 export const receivePlayer = actionCreator<Player>('receivePlayer')
 export const updatePlayer = actionCreator<Player>('updatePlayer')
 export const addPlayerBullet = actionCreator<{
-  playerId: number
+  playerId: string
   bulletId: number
 }>('addPlayerBullet')
 export const removePlayerBullet = actionCreator<{
-  playerId: number
+  playerId: string
   bulletId: number
 }>('removePlayerBullet')

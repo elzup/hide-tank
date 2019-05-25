@@ -50,7 +50,7 @@ export type Bullet = {
 }
 
 export type Player = {
-  id: number
+  id: string
   position: StagePosition
   cellPosition: CellPosition
   wepon: {
@@ -116,6 +116,8 @@ export type Control = {
 // Array<number>
 // number[]
 export type GameProgressState = {
+  playerId: string
+  enemyId: string
   processType: 'progress'
   currentPlayerId: number
   timeLimit: number
