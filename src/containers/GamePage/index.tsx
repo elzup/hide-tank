@@ -3,7 +3,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import { windowControlInit } from '../../store/Control/operations'
-import { setupLoop } from '../../store/Game/operations'
+import { setupGame } from '../../store/Game/operations'
 import { getGameState } from '../../store/Game/selectors'
 import { getStage } from '../../store/Stage/selectors'
 import { GameState, Stage, State } from '../../types'
@@ -14,13 +14,13 @@ type Props = {
   stage: Stage
   room: string
   windowControlInit: () => void
-  setupLoop: () => void
+  setupGame: (roomId: string) => void
 }
 
 class GamePage extends React.Component<Props> {
   componentDidMount() {
     this.props.windowControlInit()
-    this.props.setupLoop()
+    this.props.setupGame(this.props.room)
   }
 
   render() {
@@ -43,7 +43,7 @@ type SProps = {
   stage: Stage
 }
 type DProps = {
-  setupLoop: () => void
+  setupGame: (roomId: string) => void
   windowControlInit: () => void
 }
 
@@ -53,5 +53,5 @@ export default connect<SProps, DProps, OProps, State>(
     stage: getStage(state),
     room: ownProps.match.params.room,
   }),
-  { windowControlInit, setupLoop }
+  { windowControlInit, setupGame }
 )(GamePage)

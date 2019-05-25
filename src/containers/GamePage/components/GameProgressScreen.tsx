@@ -42,7 +42,7 @@ const GameProgressScreen = ({ stage, players, bullets }: Props) => {
   const scale = viewSize.width / 400
 
   const player = players[0]
-  console.log({ scale, viewSize })
+  // console.log({ scale, viewSize })
 
   return (
     <div
