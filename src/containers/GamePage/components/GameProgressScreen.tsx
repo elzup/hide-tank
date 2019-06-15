@@ -4,20 +4,28 @@ import { Stage } from 'react-pixi-fiber'
 
 import { Point } from 'pixi.js'
 import config from '../../../config'
-import { Bullet, Player, Stage as GameStage } from '../../../types'
+import { Bullet, Player, Stage as GameStage, StageHeader } from '../../../types'
 import BulletLayer from './BulletsLayer'
 import PlayersLayer from './PlayersLayer'
 import StageLayer from './StageLayer'
+import HeaderLayer from './HeaderLayer'
 const { aspectRate } = config
 
 type Props = {
   stage: GameStage
+  header: StageHeader
   players: Player[]
   myPlayer: Player | undefined
   bullets: Bullet[]
 }
 
-const GameProgressScreen = ({ myPlayer, stage, players, bullets }: Props) => {
+const GameProgressScreen = ({
+  myPlayer,
+  stage,
+  header,
+  players,
+  bullets,
+}: Props) => {
   const screenWidth = window.innerWidth
   const screenHeight = window.innerHeight
   // 画面の比率が縦に長過ぎるか？
@@ -75,6 +83,7 @@ const GameProgressScreen = ({ myPlayer, stage, players, bullets }: Props) => {
           scale={new Point(scale, scale)}
           options={{ backgroundColor: 0x10bb99 }}
         >
+          <HeaderLayer header={header} />
           <StageLayer stage={stage} />
           <PlayersLayer players={players} />
           <BulletLayer bullets={bullets} />
