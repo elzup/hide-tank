@@ -1,9 +1,11 @@
 import _ from 'lodash'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import { CellType, Stage } from '../../types'
+import { CellType, Stage, StageHeader } from '../../types'
 import * as actions from './actions'
 
 export type State = Stage
+
+export type StageHeader = StageHeader
 
 const stageText = `
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww

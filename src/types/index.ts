@@ -87,6 +87,11 @@ export type Stage = {
   }
 }
 
+export type StageHeader = {
+  cw: number
+  ch: number
+}
+
 export type Position = {
   x: number
   y: number
